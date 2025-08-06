@@ -1,0 +1,23 @@
+[project]
+name = "safe-web-space"
+version = "1.0.0"
+description = "Анализ тональности и классификация ненависти в социальных сетях с использованием нейронных сетей"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "streamlit",
+    "pandas",
+    "google-api-python-client",
+    "telethon",
+    "openpyxl",
+    "torch[cu124]>=2.7.1",
+    "transformers>=4.54.1",
+    "peewee>=3.18.2",
+]
+
+[project.scripts]
+main = "src.main:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
