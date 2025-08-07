@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import asyncio
 from comment_parsers import YouTubeCommentParser, TelegramCommentParser, Comment
+from config import get_setting
 
 placeholder_container = st.empty()
 
@@ -47,11 +48,11 @@ with placeholder_container.container():
         st.subheader("Парсинг комментариев из YouTube")
         
         # Проверяем наличие настроек YouTube API
-        if "settings" not in st.session_state or not st.session_state.settings.get("youtube_api_key"):
+        youtube_api_key = get_setting("youtube_api_key")
+        if not youtube_api_key:
             st.warning("⚠️ YouTube API ключ не настроен!")
             st.info("Перейдите на страницу '⚙️ Настройки' для настройки YouTube API ключа.")
         else:
-            youtube_api_key = st.session_state.settings["youtube_api_key"]
             
             if st.button("Парсить комментарии из YouTube трендов"):
                 try:
@@ -112,16 +113,15 @@ with placeholder_container.container():
         st.subheader("Парсинг комментариев из Telegram")
         
         # Проверяем наличие настроек Telegram API
-        if ("settings" not in st.session_state or 
-            not st.session_state.settings.get("telegram_api_id") or 
-            not st.session_state.settings.get("telegram_api_hash")):
+        telegram_api_id = get_setting("telegram_api_id")
+        telegram_api_hash = get_setting("telegram_api_hash")
+        telegram_bot_token = get_setting("telegram_bot_token")
+        telegram_phone = get_setting("telegram_phone")
+        
+        if not telegram_api_id or not telegram_api_hash:
             st.warning("⚠️ Telegram API не настроен!")
             st.info("Перейдите на страницу '⚙️ Настройки' для настройки Telegram API.")
         else:
-            telegram_api_id = st.session_state.settings["telegram_api_id"]
-            telegram_api_hash = st.session_state.settings["telegram_api_hash"]
-            telegram_bot_token = st.session_state.settings.get("telegram_bot_token", "")
-            telegram_phone = st.session_state.settings.get("telegram_phone", "")
             
             # Выбор типа подключения
             connection_type = st.radio(

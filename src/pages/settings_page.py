@@ -114,7 +114,7 @@ with col1:
     st.write("**YouTube API:**")
     youtube_key = get_setting("youtube_api_key")
     if youtube_key:
-        st.write(f"✅ Ключ установлен: {youtube_key[:10]}...")
+        st.write("✅ Ключ установлен")
     else:
         st.write("❌ Ключ не установлен")
     
