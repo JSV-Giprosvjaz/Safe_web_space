@@ -1,5 +1,5 @@
 import streamlit as st
-from config import save_settings, get_environment_info, clear_temp_settings
+from config import save_settings, get_environment_info, get_setting
 
 def clean_input(text):
     """Удаляет все пробелы из введенного текста"""
@@ -31,7 +31,7 @@ if env_info["debug_mode"]:
 
     youtube_api_key = clean_input(st.text_input(
         "YouTube API ключ",
-        value=st.session_state.settings.get("youtube_api_key", ""),
+        value=get_setting("youtube_api_key", ""),
         type="password",
         help="Получите ключ на https://console.cloud.google.com/apis/credentials"
     ))
@@ -44,7 +44,7 @@ if env_info["debug_mode"]:
     with col1:
         telegram_api_id = clean_input(st.text_input(
             "Telegram API ID",
-            value=st.session_state.settings.get("telegram_api_id", ""),
+            value=get_setting("telegram_api_id", ""),
             type="password",
             help="Получите на https://my.telegram.org/apps"
         ))
@@ -52,7 +52,7 @@ if env_info["debug_mode"]:
     with col2:
         telegram_api_hash = clean_input(st.text_input(
             "Telegram API Hash",
-            value=st.session_state.settings.get("telegram_api_hash", ""),
+            value=get_setting("telegram_api_hash", ""),
             type="password",
             help="Получите на https://my.telegram.org/apps"
         ))
@@ -62,7 +62,7 @@ if env_info["debug_mode"]:
 
     telegram_bot_token = clean_input(st.text_input(
         "Bot Token",
-        value=st.session_state.settings.get("telegram_bot_token", ""),
+        value=get_setting("telegram_bot_token", ""),
         type="password",
         help="Получите у @BotFather в Telegram"
     ))
@@ -72,7 +72,7 @@ if env_info["debug_mode"]:
 
     telegram_phone = clean_input(st.text_input(
         "Номер телефона",
-        value=st.session_state.settings.get("telegram_phone", ""),
+        value=get_setting("telegram_phone", ""),
         help="Введите номер в международном формате (например: +79001234567)"
     ))
 
@@ -88,12 +88,9 @@ if env_info["debug_mode"]:
             "telegram_phone": telegram_phone
         }
         
-        # Обновляем session_state
-        st.session_state.settings.update(new_settings)
-        
         # Сохраняем настройки
-        if save_settings(st.session_state.settings):
-            st.success("✅ Настройки сохранены в session_state!")
+        if save_settings(new_settings):
+            st.rerun()  # Перезагружаем страницу для отображения новых значений
 
     # Кнопка очистки настроек
     if st.button("🗑️ Очистить настройки"):
@@ -105,13 +102,9 @@ if env_info["debug_mode"]:
             "telegram_phone": ""
         }
         
-        # Обновляем session_state
-        st.session_state.settings = empty_settings
-        
-        # Очищаем временные настройки
-        clear_temp_settings()
-        
-        st.success("✅ Настройки очищены!")
+        # Сохраняем пустые настройки
+        if save_settings(empty_settings):
+            st.rerun()  # Перезагружаем страницу
 
 # Отображение текущих настроек (маскированные)
 st.markdown("### Текущие настройки")
@@ -119,26 +112,31 @@ col1, col2 = st.columns(2)
 
 with col1:
     st.write("**YouTube API:**")
-    if st.session_state.settings.get("youtube_api_key"):
-        st.write(f"✅ Ключ установлен: {st.session_state.settings['youtube_api_key'][:10]}...")
+    youtube_key = get_setting("youtube_api_key")
+    if youtube_key:
+        st.write(f"✅ Ключ установлен: {youtube_key[:10]}...")
     else:
         st.write("❌ Ключ не установлен")
     
     st.write("**Telegram API:**")
-    if st.session_state.settings.get("telegram_api_id") and st.session_state.settings.get("telegram_api_hash"):
+    telegram_id = get_setting("telegram_api_id")
+    telegram_hash = get_setting("telegram_api_hash")
+    if telegram_id and telegram_hash:
         st.write("✅ API ID и Hash установлены")
     else:
         st.write("❌ API ID или Hash не установлены")
 
 with col2:
     st.write("**Telegram Bot:**")
-    if st.session_state.settings.get("telegram_bot_token"):
+    bot_token = get_setting("telegram_bot_token")
+    if bot_token:
         st.write("✅ Bot Token установлен")
     else:
         st.write("❌ Bot Token не установлен")
     
     st.write("**Telegram Phone:**")
-    if st.session_state.settings.get("telegram_phone"):
+    phone = get_setting("telegram_phone")
+    if phone:
         st.write("✅ Номер телефона установлен")
     else:
         st.write("❌ Номер телефона не установлен") 
