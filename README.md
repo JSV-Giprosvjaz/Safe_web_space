@@ -416,6 +416,7 @@ result = predict(dataframe)
 
 | Ключ | Описание | Пример |
 |------|----------|--------|
+| `debug` | Режим отладки (управление настройками) | `true` или `false` |
 | `youtube_api_key` | YouTube API ключ | `AIzaSyB...` |
 | `telegram_api_id` | Telegram API ID | `12345678` |
 | `telegram_api_hash` | Telegram API Hash | `abcdef1234567890abcdef1234567890` |
@@ -426,7 +427,9 @@ result = predict(dataframe)
 
 1. Перейдите в настройки вашего приложения в Streamlit Cloud
 2. Найдите раздел "Secrets"
-3. Добавьте необходимые ключи и значения
+3. Добавьте необходимые ключи и значения:
+   - `debug = false` - для продакшена (настройки нельзя изменять)
+   - `debug = true` - для отладки (настройки можно изменять)
 4. Сохраните изменения
 
 #### Проверка настроек

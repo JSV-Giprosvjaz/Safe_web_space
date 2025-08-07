@@ -19,18 +19,19 @@ def load_settings() -> Dict[str, str]:
             settings[setting_key] = str(value)
     return settings
 
+def is_debug_mode() -> bool:
+    """Проверяет, включен ли режим отладки"""
+    return st.secrets.get("debug", False)
+
 def save_settings(settings: Dict[str, str]) -> bool:
-    """Сохраняет настройки в Streamlit Secrets (только для локальной разработки)"""
-    # Проверяем, есть ли secrets в продакшене
-    has_secrets = any(st.secrets.get(key) for key in SETTINGS_KEYS.values())
-    
-    if has_secrets:
+    """Сохраняет настройки в Streamlit Secrets (только в режиме отладки)"""
+    if not is_debug_mode():
         # В продакшене нельзя изменять настройки
-        st.warning("⚠️ В продакшене настройки управляются через Streamlit Cloud Secrets")
+        st.warning("⚠️ Настройки можно изменять только в режиме отладки (debug = True)")
         return False
     
     try:
-        # В локальной разработке обновляем session_state
+        # В режиме отладки обновляем session_state
         for setting_key, value in settings.items():
             if setting_key in SETTINGS_KEYS:
                 # Обновляем в session_state для текущей сессии
@@ -70,13 +71,12 @@ def is_setting_configured(key: str) -> bool:
 
 def get_environment_info() -> Dict[str, Any]:
     """Возвращает информацию об окружении"""
-    # Проверяем, есть ли secrets в продакшене
-    has_secrets = any(st.secrets.get(key) for key in SETTINGS_KEYS.values())
+    debug_mode = is_debug_mode()
     
     return {
-        "is_production": has_secrets,
+        "is_production": not debug_mode,
         "settings_source": "streamlit_secrets",
-        "has_secrets": has_secrets,
+        "debug_mode": debug_mode,
         "configured_secrets": {key: bool(st.secrets.get(secret_key)) for key, secret_key in SETTINGS_KEYS.items()}
     }
 
