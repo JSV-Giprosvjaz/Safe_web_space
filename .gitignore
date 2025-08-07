@@ -170,6 +170,7 @@ parser/
 
 # Settings files
 settings.json
+.streamlit/secrets.toml
 
 # Database files
 *.db
