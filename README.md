@@ -397,6 +397,70 @@ result = predict(dataframe)
 }
 ```
 
+## 🔧 Настройка окружения
+
+### Локальная разработка
+
+В локальном режиме настройки сохраняются в файл `settings.json`:
+
+1. Запустите приложение: `streamlit run src/main.py`
+2. Перейдите в раздел "⚙️ Настройки"
+3. Введите необходимые API ключи
+4. Сохраните настройки
+
+### Продакшен развертывание
+
+В продакшене настройки загружаются из переменных окружения:
+
+#### Переменные окружения
+
+| Переменная | Описание | Пример |
+|------------|----------|--------|
+| `YOUTUBE_API_KEY` | YouTube API ключ | `AIzaSyB...` |
+| `TELEGRAM_API_ID` | Telegram API ID | `12345678` |
+| `TELEGRAM_API_HASH` | Telegram API Hash | `abcdef1234567890abcdef1234567890` |
+| `TELEGRAM_BOT_TOKEN` | Telegram Bot Token | `1234567890:ABCdefGHIjklMNOpqrsTUVwxyz` |
+| `TELEGRAM_PHONE` | Номер телефона | `+79001234567` |
+| `STREAMLIT_SERVER_ENV` | Окружение Streamlit | `production` |
+| `DEPLOYMENT_ENV` | Окружение развертывания | `production` |
+
+#### Настройка переменных окружения
+
+**Docker:**
+```dockerfile
+ENV YOUTUBE_API_KEY=your_key_here
+ENV TELEGRAM_API_ID=your_id_here
+ENV TELEGRAM_API_HASH=your_hash_here
+ENV STREAMLIT_SERVER_ENV=production
+ENV DEPLOYMENT_ENV=production
+```
+
+**Heroku:**
+```bash
+heroku config:set YOUTUBE_API_KEY=your_key_here
+heroku config:set TELEGRAM_API_ID=your_id_here
+heroku config:set TELEGRAM_API_HASH=your_hash_here
+heroku config:set STREAMLIT_SERVER_ENV=production
+heroku config:set DEPLOYMENT_ENV=production
+```
+
+**Docker Compose:**
+```yaml
+environment:
+  - YOUTUBE_API_KEY=your_key_here
+  - TELEGRAM_API_ID=your_id_here
+  - TELEGRAM_API_HASH=your_hash_here
+  - STREAMLIT_SERVER_ENV=production
+  - DEPLOYMENT_ENV=production
+```
+
+#### Проверка настроек
+
+В интерфейсе приложения в разделе "⚙️ Настройки" отображается:
+- Режим работы (локальный/продакшен)
+- Источник настроек (файл/переменные окружения)
+- Статус переменных окружения в продакшене
+
 ## 🌐 Streamlit приложение
 
 ### Описание

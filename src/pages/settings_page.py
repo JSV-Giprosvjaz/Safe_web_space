@@ -1,25 +1,28 @@
 import streamlit as st
-import json
-import os
-
-# Путь к файлу настроек
-SETTINGS_FILE = "settings.json"
+from config import save_settings, get_environment_info, is_production
 
 def clean_input(text):
     """Удаляет все пробелы из введенного текста"""
     return text.strip() if text else ""
 
-def save_settings(settings):
-    """Сохраняет настройки в файл"""
-    try:
-        with open(SETTINGS_FILE, 'w', encoding='utf-8') as f:
-            json.dump(settings, f, ensure_ascii=False, indent=2)
-        return True
-    except Exception as e:
-        st.error(f"Ошибка сохранения настроек: {e}")
-        return False
-
 st.header("⚙️ Настройки API")
+
+# Показываем информацию об окружении
+env_info = get_environment_info()
+if env_info["is_production"]:
+    st.info("🌐 **Продакшен режим**: Настройки загружаются из переменных окружения")
+else:
+    st.info("💻 **Локальный режим**: Настройки сохраняются в файл settings.json")
+
+# Показываем статус переменных окружения
+if env_info["is_production"]:
+    st.markdown("### 📋 Статус переменных окружения")
+    env_status = env_info["environment_variables"]
+    for setting, is_set in env_status.items():
+        status = "✅ Установлена" if is_set else "❌ Не установлена"
+        st.write(f"**{setting}:** {status}")
+
+st.markdown("---")
 
 st.markdown("### YouTube API")
 st.markdown("Для парсинга комментариев из YouTube необходим API ключ.")
@@ -84,26 +87,32 @@ if st.button("💾 Сохранить настройки"):
     # Обновляем session_state
     st.session_state.settings.update(new_settings)
     
-    # Сохраняем в файл
+    # Сохраняем настройки
     if save_settings(st.session_state.settings):
-        st.success("✅ Настройки сохранены и будут доступны после перезагрузки!")
+        if is_production():
+            st.success("✅ Настройки обновлены в session_state!")
+        else:
+            st.success("✅ Настройки сохранены в файл и будут доступны после перезагрузки!")
 
-# Кнопка очистки настроек
-if st.button("🗑️ Очистить настройки"):
-    empty_settings = {
-        "youtube_api_key": "",
-        "telegram_api_id": "",
-        "telegram_api_hash": "",
-        "telegram_bot_token": "",
-        "telegram_phone": ""
-    }
-    
-    # Обновляем session_state
-    st.session_state.settings = empty_settings
-    
-    # Сохраняем в файл
-    if save_settings(empty_settings):
-        st.success("✅ Настройки очищены!")
+# Кнопка очистки настроек (только в локальном режиме)
+if not is_production():
+    if st.button("🗑️ Очистить настройки"):
+        empty_settings = {
+            "youtube_api_key": "",
+            "telegram_api_id": "",
+            "telegram_api_hash": "",
+            "telegram_bot_token": "",
+            "telegram_phone": ""
+        }
+        
+        # Обновляем session_state
+        st.session_state.settings = empty_settings
+        
+        # Сохраняем в файл
+        if save_settings(empty_settings):
+            st.success("✅ Настройки очищены!")
+else:
+    st.info("ℹ️ В продакшене настройки управляются через переменные окружения")
 
 # Отображение текущих настроек (маскированные)
 st.markdown("### Текущие настройки")

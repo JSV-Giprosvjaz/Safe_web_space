@@ -1,25 +1,5 @@
 import streamlit as st
-import json
-import os
-
-# Путь к файлу настроек
-SETTINGS_FILE = "settings.json"
-
-def load_settings():
-    """Загружает настройки из файла"""
-    if os.path.exists(SETTINGS_FILE):
-        try:
-            with open(SETTINGS_FILE, 'r', encoding='utf-8') as f:
-                return json.load(f)
-        except Exception as e:
-            st.error(f"Ошибка загрузки настроек: {e}")
-    return {
-        "youtube_api_key": "",
-        "telegram_api_id": "",
-        "telegram_api_hash": "",
-        "telegram_bot_token": "",
-        "telegram_phone": ""
-    }
+from config import load_settings
 
 # Инициализация session_state
 if "file" not in st.session_state:
