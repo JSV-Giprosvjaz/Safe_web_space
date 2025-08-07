@@ -8,8 +8,8 @@ if "data_for_tone" not in st.session_state:
     st.session_state.data_for_tone = None
 if "is_need_to_process_data" not in st.session_state:
     st.session_state.is_need_to_process_data = None
-if "settings" not in st.session_state:
-    st.session_state.settings = load_settings()
+# Всегда обновляем настройки из secrets
+st.session_state.settings = load_settings()
 
 st.logo("static/logo.jpg", size="large")
 

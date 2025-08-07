@@ -17,6 +17,13 @@ else:
 
 st.markdown("---")
 
+# Инициализируем переменные настройки
+youtube_api_key = ""
+telegram_api_id = ""
+telegram_api_hash = ""
+telegram_bot_token = ""
+telegram_phone = ""
+
 # Показываем поля ввода только в режиме отладки
 if env_info["debug_mode"]:
     st.markdown("### YouTube API")
