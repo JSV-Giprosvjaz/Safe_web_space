@@ -937,7 +937,7 @@ wheels = [
 
 [[package]]
 name = "safe-web-space"
-version = "0.1.0"
+version = "1.0.0"
 source = { virtual = "." }
 dependencies = [
     { name = "google-api-python-client" },
@@ -946,6 +946,7 @@ dependencies = [
     { name = "peewee" },
     { name = "streamlit" },
     { name = "telethon" },
+    { name = "toml" },
     { name = "torch" },
     { name = "transformers" },
 ]
@@ -958,6 +959,7 @@ requires-dist = [
     { name = "peewee", specifier = ">=3.18.2" },
     { name = "streamlit" },
     { name = "telethon" },
+    { name = "toml" },
     { name = "torch", extras = ["cu124"], specifier = ">=2.7.1" },
     { name = "transformers", specifier = ">=4.54.1" },
 ]

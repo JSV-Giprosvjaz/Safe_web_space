@@ -1,5 +1,8 @@
 import streamlit as st
-from config import load_settings
+from config import load_settings, ensure_secrets_file_exists
+
+# Создаем файл secrets.toml если он не существует (автоматически при первом запуске)
+ensure_secrets_file_exists()
 
 # Инициализация session_state
 if "file" not in st.session_state:
